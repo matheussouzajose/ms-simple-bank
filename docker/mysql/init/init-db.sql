@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS hyperf CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS hyperf_testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'hyperf'@'%' IDENTIFIED BY 'secret';
+GRANT ALL PRIVILEGES ON hyperf.* TO 'hyperf'@'%';
+GRANT ALL PRIVILEGES ON hyperf_testing.* TO 'hyperf'@'%';
+FLUSH PRIVILEGES;

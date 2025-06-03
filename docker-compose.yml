@@ -1,0 +1,46 @@
+services:
+  app:
+    container_name: app-simple-bank
+    image: app-simple-bank
+    build:
+      context: .
+    volumes:
+      - ./:/opt/www
+    ports:
+      - "${APP_PORT}:9501"
+    environment:
+      - APP_ENV=dev
+      - SCAN_CACHEABLE=false
+    networks:
+      - ms-simple-bank
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-simple-bank
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - mysql-simple-bank-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - ms-simple-bank
+
+  redis:
+    image: redis:alpine
+    container_name: hyperf-redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - ms-simple-bank
+
+volumes:
+  mysql-simple-bank-data:
+
+networks:
+  ms-simple-bank:

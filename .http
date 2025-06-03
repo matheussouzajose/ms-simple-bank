@@ -1,0 +1,60 @@
+### Cria um usuário comum com saldo inicial de 1000.00
+POST http://localhost:9501/api/v1/users
+Content-Type: application/json
+
+{
+  "fullName": "John Doe",
+  "email": "jonh.doe@gmail.com",
+  "document": "827.246.030-01",
+  "type": "COMMON",
+  "password": "Mudar@123"
+}
+
+### Cria um usuário comum com saldo inicial de 1000.00
+POST http://localhost:9501/api/v1/users
+Content-Type: application/json
+
+{
+  "fullName": "John Doe 2",
+  "email": "jonh.doe2@gmail.com",
+  "document": "425.243.330-43",
+  "type": "COMMON",
+  "password": "Mudar@123"
+}
+
+### Cria um usuário merchant com saldo inicial de 1000.00
+POST http://localhost:9501/api/v1/users
+Content-Type: application/json
+
+{
+  "fullName": "John Doe",
+  "email": "jonh.doe@merchant.com",
+  "document": "64.731.017/0001-00",
+  "type": "MERCHANT",
+  "password": "Mudar@123",
+  "balance": 100000
+}
+
+### Depositar valor em uma carteira de usuário comum
+POST http://localhost:9501/api/v1/wallets/credit
+Content-Type: application/json
+
+{
+  "userId": "b6ce6032-984e-4c7d-ae20-2c0a4470367c",
+  "walletId": "a93f7ad7-f209-4b9a-b435-31481300f0ad",
+  "balance": 100000
+}
+
+
+### Realiza uma transferência entre usuários inexistentes
+POST http://localhost:9501/api/v1/transfer
+Content-Type: application/json
+
+{
+  "payerId": "d69dec95-1be8-49f5-9f09-fb4c7c4d6fbd",
+  "payeeId": "b6ce6032-984e-4c7d-ae20-2c0a4470367c",
+  "value": 29999
+}
+
+
+
