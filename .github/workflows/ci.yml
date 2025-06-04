@@ -1,6 +1,6 @@
 name: CI - Hyperf Docker
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
@@ -49,4 +49,4 @@ jobs:
             -e DB_PASSWORD=secret \
             -e DB_DATABASE=hyperf_test \
             --entrypoint composer \
-            hyperf test test\Unit
+            hyperf test test/Unit
