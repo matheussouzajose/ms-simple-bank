@@ -3,8 +3,9 @@ name: CI - Hyperf Docker
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
     services:
       mysql:
         image: mysql:8.0
@@ -24,22 +25,28 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-      - name: Copy Dockerfile
-        run: cp -rf .github/workflows/Dockerfile .
+      - name: Copy Dockerfile to root
+        run: cp .github/workflows/Dockerfile .
 
       - name: Build Docker image
         run: docker build -t hyperf .
 
-      - name: Wait for MySQL
+      - name: Run PHPStan
         run: |
-          for i in {1..10}; do
-            mysqladmin ping -h127.0.0.1 -uroot -proot && break
-            sleep 3
-          done
+          docker run --rm --network host \
+            --entrypoint composer \
+            hyperf analyse
 
-      - name: Run PHPStan inside container
-        run: docker run --network host -e DB_HOST=127.0.0.1 hyperf vendor/bin/phpstan analyse
-
-      - name: Run PHPUnit inside container
-        run: docker run --network host -e DB_HOST=127.0.0.1 hyperf vendor/bin/phpunit
+      - name: Run PHPUnit
+        run: |
+          docker run --rm --network host \
+            -e DB_HOST=mysql \
+            -e DB_PORT=3306 \
+            -e DB_USERNAME=hyperf \
+            -e DB_PASSWORD=secret \
+            -e DB_DATABASE=hyperf_test \
+            --entrypoint composer \
+            hyperf test test\Unit

@@ -77,7 +77,7 @@
         ],
         "test": "co-phpunit --prepend test/bootstrap.php --colors=always",
         "cs-fix": "php-cs-fixer fix $1",
-        "analyse": "phpstan analyse --memory-limit 300M",
+        "analyse": "phpstan analyse -c phpstan.neon.dist --memory-limit 300M app --memory-limit 300M",
         "start": [
             "Composer\\Config::disableProcessTimeout",
             "php ./bin/hyperf.php start"

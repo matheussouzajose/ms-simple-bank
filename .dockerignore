@@ -3,3 +3,7 @@
 !bin/
 !config/
 !composer.*
+!src
+!test
+!phpunit.xml.dist
+!phpstan.neon.dist
