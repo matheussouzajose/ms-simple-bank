@@ -1,0 +1,66 @@
+name: CI - Hyperf
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hyperf_test
+          MYSQL_USER: hyperf
+          MYSQL_PASSWORD: secret
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: swoole, pdo_mysql
+          tools: composer, phpstan, phpunit
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..10}; do
+            mysqladmin ping -h127.0.0.1 -uroot -proot && break
+            sleep 3
+          done
+
+      - name: Copy .env.testing
+        run: cp .env.testing .env
+
+      - name: Run migrations
+        run: php bin/hyperf.php migrate
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse -c phpstan.neon
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit
