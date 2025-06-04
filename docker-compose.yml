@@ -6,8 +6,6 @@ services:
       context: .
     volumes:
       - ./:/opt/www
-    ports:
-      - "${APP_PORT}:9501"
     environment:
       - APP_ENV=dev
       - SCAN_CACHEABLE=false
@@ -36,6 +34,19 @@ services:
     container_name: hyperf-redis
     ports:
       - "${REDIS_PORT}:6379"
+    networks:
+      - ms-simple-bank
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: nginx-simple-bank
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
     networks:
       - ms-simple-bank
 
