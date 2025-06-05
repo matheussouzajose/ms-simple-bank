@@ -24,6 +24,7 @@ use Core\User\Domain\Enum\UserType;
 use Core\User\Infra\Persistence\Eloquent\UserEloquentRepository;
 use Core\Wallet\Infra\Persistence\Eloquent\WalletEloquentRepository;
 use HyperfTest\SetupTestCase;
+use Throwable;
 
 /**
  * @internal
@@ -54,7 +55,7 @@ class CreateUserUseCaseIntTest extends SetupTestCase
 
     /**
      * @throws ValueObjectException
-     * @throws ApplicationException
+     * @throws ApplicationException|Throwable
      */
     public function testShouldThrowExceptionWhenEmailAlreadyExists()
     {
@@ -81,7 +82,7 @@ class CreateUserUseCaseIntTest extends SetupTestCase
 
     /**
      * @throws ValueObjectException
-     * @throws ApplicationException
+     * @throws ApplicationException|Throwable
      */
     public function testShouldThrowExceptionWhenDocumentAlreadyExists()
     {
@@ -116,6 +117,7 @@ class CreateUserUseCaseIntTest extends SetupTestCase
     /**
      * @throws ValueObjectException
      * @throws ApplicationException
+     * @throws Throwable
      */
     public function testShouldCreateUserWithCommonType()
     {

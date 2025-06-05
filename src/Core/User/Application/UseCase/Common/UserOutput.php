@@ -22,6 +22,7 @@ class UserOutput
         public string $email,
         public string $document,
         public string $type,
+        public array $walletIds = [],
         public string $createdAt = '',
         public string $updatedAt = '',
     ) {
@@ -35,6 +36,7 @@ class UserOutput
             email: $user->email->value(),
             document: $user->document->value(),
             type: $user->type->value,
+            walletIds: array_map(fn ($wallet) => $wallet->value(), $user->walletIds),
             createdAt: $user->createdAt->format('Y-m-d H:i:s'),
             updatedAt: $user->updatedAt->format('Y-m-d H:i:s'),
         );

@@ -31,12 +31,12 @@ use Core\Wallet\Domain\ValueObject\Balance;
 use DateTimeImmutable;
 use Throwable;
 
-readonly class CreateUserUseCase
+class CreateUserUseCase
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private WalletRepositoryInterface $walletRepository,
-        private UnitOfWorkInterface $unitOfWork,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly WalletRepositoryInterface $walletRepository,
+        private readonly UnitOfWorkInterface $unitOfWork,
     ) {
     }
 
@@ -61,6 +61,7 @@ readonly class CreateUserUseCase
             userId: $user->id,
             balance: new Balance($input->balance ?? 0),
         );
+        $user->addWalletId($wallet->id);
 
         $this->unitOfWork->do(function () use ($user, $wallet) {
             $this->userRepository->insert($user);

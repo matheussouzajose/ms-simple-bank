@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace App\Resource\User;
 
-use Hyperf\Context\Context;
 use Hyperf\Resource\Json\JsonResource;
-use Psr\Http\Message\ServerRequestInterface;
 
 class UserResource extends JsonResource
 {
@@ -29,6 +27,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'document' => $this->document,
             'type' => $this->type,
+            'wallets' => $this->walletIds,
             'createdAt' => $this->createdAt,
         ];
     }
